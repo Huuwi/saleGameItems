@@ -8,10 +8,10 @@ const main = async () => {
     let connection = new Connection()
     await connection.connect()
 
-    // await connection.executeQuery(`CREATE TABLE table_name (
+    // await connection.executeQuery(`CREATE TABLE user (
     // userId int not null AUTO_INCREMENT primary key ,
     // username varchar(20) not null ,
-    // password varchar(20) not null,
+    // password varchar(100) not null,
     // balance double default 0 ,
     // isRegSale boolean default 0,
     // idGame varchar(20) ,
@@ -22,6 +22,7 @@ const main = async () => {
     // await connection.executeQuery(`
     //     insert into table user
     //     `)
+
 
 }
 
