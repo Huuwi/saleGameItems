@@ -47,7 +47,9 @@ class CommonHelper {
                     }
                     base64 = canvas.toDataURL("image/png")
                 })
-            fs.writeFileSync("./image.png", base64, { encoding: "base64" })
+            console.log(text);
+
+            fs.writeFileSync("./captcha.png", base64, { encoding: "base64" })
 
             globalThis.captchaOfIpAddress.set(ipAddress, { text, date: Date.now() + 60 * 1000 })
 
@@ -78,6 +80,7 @@ class CommonHelper {
             }
 
             if (text != textCaptchaClient) {
+                captchaData.date = Date.now() - 1
                 return { state: false, message: "captcha not valid!" }
             }
 

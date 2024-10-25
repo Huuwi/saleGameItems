@@ -7,7 +7,7 @@ let authController = new AuthController()
 
 api.get("/", (req, res) => {
     const forwardedIp = req.headers['x-forwarded-for'] || req.ip
-    // res.cookie("test", "test", { maxAge: 20 * 1000 })
+    res.cookie("test", "test")
     res.status(200).json(
         {
             message: "your ip address : " + forwardedIp
@@ -17,6 +17,7 @@ api.get("/", (req, res) => {
 
 api.post("/getNewCaptcha", commonController.getNewCaptcha)
 api.post("/login", authController.login)
+api.post("/register", authController.register)
 
 
 module.exports = { api }
