@@ -1,5 +1,5 @@
-var bcrypt = require('bcryptjs');
-var salt = bcrypt.genSaltSync(10);
+const bcrypt = require('bcryptjs');
+
 
 const CommonHelper = require("../helper/common.helper.js")
 let commonHelper = new CommonHelper()
@@ -68,6 +68,17 @@ class AuthController {
                 })
             }
 
+            let charactersNotValid = ["`", '"', "`"]
+
+
+            for (e of charactersNotValid) {
+                if (userName.includes(e)) {
+                    return res.status(400).json({
+                        message: `can't include characters :  ${charactersNotValid.join(" ,")}`
+                    })
+                }
+            }
+
             if (rePassWord != passWord) {
                 return res.status(400).json({
                     message: "Password and re-entered password are not the same!!"
@@ -85,11 +96,23 @@ class AuthController {
 
             let userFound = await globalThis.connection.executeQuery("select * from user where userName = ?", [userName])
                 .then((data) => {
-                    return data[0]
+                    return data
                 })
                 .catch((e) => {
                     console.log(e);
                 })
+
+            if (userFound?.length) {
+                return res.status(400).json({
+                    message: "userName already existed!",
+                })
+            }
+
+            const salt = bcrypt.genSaltSync(10);
+            let hashPassWord = bcrypt.hashSync(passWord, salt)
+
+            await globalThis.connection.executeQuery(`INSERT INTO table_name (userName , passWord , )
+                                                        VALUES (value1, value2, value3, ...);`)
 
 
 

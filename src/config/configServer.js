@@ -9,7 +9,8 @@ const configServer = (server) => {
     server.use(express.static("./src/public"))
     server.use(express.urlencoded({ extended: true }))
     server.use(cors({
-        origin: urls
+        origin: urls,
+        credentials: true
     }))
 }
 
