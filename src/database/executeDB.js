@@ -11,7 +11,7 @@ const main = async () => {
     // await connection.executeQuery(`CREATE TABLE user (
     //     userId int primary key NOT NULL AUTO_INCREMENT,
     //     userName varchar(30) not null,
-    //     passWord varchar(30) not null ,
+    //     passWord varchar(100) not null ,
     //     nickName varchar(30) CHARACTER SET utf8mb4,
     //     avartar varchar(255) default 'https://i.pinimg.com/736x/97/b6/2f/97b62faf1b0981474fea80d14a6bdcad.jpg',
     //     gameId int default -1,
@@ -72,10 +72,6 @@ const main = async () => {
     //     idItem int,
     //     price double
     // );`)
-
-
-
-
 
 
 }

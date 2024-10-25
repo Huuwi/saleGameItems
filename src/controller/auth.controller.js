@@ -82,7 +82,7 @@ class AuthController {
             let charactersNotValid = ["`", '"', "`"]
 
 
-            for (e of charactersNotValid) {
+            for (let e of charactersNotValid) {
                 if (userName.includes(e) || nickName.includes(e)) {
                     return res.status(400).json({
                         message: `can't include characters :  ${charactersNotValid.join(" ,")}`
@@ -122,7 +122,7 @@ class AuthController {
             const salt = bcrypt.genSaltSync(10);
             let hashPassWord = bcrypt.hashSync(passWord, salt)
 
-            await globalThis.connection.executeQuery(`INSERT INTO table_name (userName , passWord , nickName)
+            await globalThis.connection.executeQuery(`INSERT INTO user (userName , passWord , nickName)
                                                         VALUES (? , ? , ?);` , [userName, hashPassWord, nickName])
 
 
