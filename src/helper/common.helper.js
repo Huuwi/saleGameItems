@@ -83,7 +83,7 @@ class CommonHelper {
                 captchaData.date = Date.now() - 1
                 return { state: false, message: "captcha not valid!" }
             }
-
+            captchaData.date = Date.now() - 1
             return { state: true, message: "valid success!" }
 
         } catch (error) {
