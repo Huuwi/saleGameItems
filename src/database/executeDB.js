@@ -23,6 +23,13 @@ const main = async () => {
     //     insert into table user
     //     `)
 
+    // await connection.executeQuery('insert into user (username, password, balance, isRegSale, idGame, timeCreate, isAdmin) values (?, ?, ?, ?, ?, ?, ?)', ['Dung', 'dung123', 10, 1, 'game1', 23, 1]).catch((err) => {console.log(err);})
+
+    await connection.executeQuery('SELECT * FROM user').then((data) => {
+        console.log(data);
+    }).catch((err) => {
+        console.log(err);
+    });
 }
 
 main()
