@@ -8,10 +8,10 @@ const main = async () => {
     let connection = new Connection()
     await connection.connect()
 
-    // await connection.executeQuery(`CREATE TABLE table_name (
+    // await connection.executeQuery(`CREATE TABLE user (
     // userId int not null AUTO_INCREMENT primary key ,
     // username varchar(20) not null ,
-    // password varchar(20) not null,
+    // password varchar(100) not null,
     // balance double default 0 ,
     // isRegSale boolean default 0,
     // idGame varchar(20) ,
@@ -23,13 +23,6 @@ const main = async () => {
     //     insert into table user
     //     `)
 
-    // await connection.executeQuery('insert into user (username, password, balance, isRegSale, idGame, timeCreate, isAdmin) values (?, ?, ?, ?, ?, ?, ?)', ['Dung', 'dung123', 10, 1, 'game1', 23, 1]).catch((err) => {console.log(err);})
-
-    await connection.executeQuery('SELECT * FROM user').then((data) => {
-        console.log(data);
-    }).catch((err) => {
-        console.log(err);
-    });
 }
 
 main()
