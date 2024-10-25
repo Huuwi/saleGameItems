@@ -28,6 +28,17 @@ class AuthController {
                 })
             }
 
+            let charactersNotValid = ["`", '"', "`"]
+
+
+            for (e of charactersNotValid) {
+                if (userName.includes(e)) {
+                    return res.status(400).json({
+                        message: `can't include characters :  ${charactersNotValid.join(" ,")}`
+                    })
+                }
+            }
+
             let userFound = await globalThis.connection.executeQuery("select * from user where userName = ?", [userName])
                 .then((data) => {
                     return data[0]
@@ -59,10 +70,10 @@ class AuthController {
     async register(req, res) {
         try {
 
-            let { text, userName, passWord, rePassWord } = req.body
+            let { text, userName, passWord, rePassWord, nickName } = req.body
             let ipAddress = req.ip || req.headers["x-forwarded-for"]
 
-            if (!text || !userName || !passWord || !rePassWord) {
+            if (!text || !userName || !passWord || !rePassWord || !nickName) {
                 return res.status(400).json({
                     message: "missing data!"
                 })
@@ -72,7 +83,7 @@ class AuthController {
 
 
             for (e of charactersNotValid) {
-                if (userName.includes(e)) {
+                if (userName.includes(e) || nickName.includes(e)) {
                     return res.status(400).json({
                         message: `can't include characters :  ${charactersNotValid.join(" ,")}`
                     })
@@ -111,14 +122,14 @@ class AuthController {
             const salt = bcrypt.genSaltSync(10);
             let hashPassWord = bcrypt.hashSync(passWord, salt)
 
-            await globalThis.connection.executeQuery(`INSERT INTO table_name (userName , passWord , )
-                                                        VALUES (value1, value2, value3, ...);`)
+            await globalThis.connection.executeQuery(`INSERT INTO table_name (userName , passWord , nickName)
+                                                        VALUES (? , ? , ?);` , [userName, hashPassWord, nickName])
 
 
 
             return res.status(200).json({
                 message: "ok",
-                userFound: JSON.stringify(userFound)
+                data: JSON.stringify({ userName, hashPassWord, nickName })
             })
 
 
