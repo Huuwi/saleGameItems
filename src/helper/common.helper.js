@@ -47,7 +47,6 @@ class CommonHelper {
                     }
                     base64 = canvas.toDataURL("image/png")
                 })
-            console.log(text);
 
             fs.writeFileSync("./captcha.png", base64, { encoding: "base64" })
 

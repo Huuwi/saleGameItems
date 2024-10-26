@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const CommonHelper = require("../helper/common.helper.js")
 let commonHelper = new CommonHelper()
 
+const AuthHelper = require("../helper/auth.helper.js")
+let autHelper = new AuthHelper()
 
 class AuthController {
 
@@ -31,7 +33,7 @@ class AuthController {
             let charactersNotValid = ["`", '"', "`"]
 
 
-            for (e of charactersNotValid) {
+            for (let e of charactersNotValid) {
                 if (userName.includes(e)) {
                     return res.status(400).json({
                         message: `can't include characters :  ${charactersNotValid.join(" ,")}`
@@ -48,10 +50,30 @@ class AuthController {
                 })
 
 
+            if (!bcrypt.compareSync(passWord != userFound.passWord)) {
+                return res.status(400).json({
+                    message: "password is not correct!"
+                })
+            }
+            let userId = userFound.userId
 
+            let at = autHelper.generatorAccessToken({ userId }).at
+            let rt = autHelper.generatorRefreshToken({ userId }).rt
+
+
+            globalThis.tokenOfUserId.set(userId, {
+                at, rt
+            })
+
+
+            res.cookie("at", at, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true, })
+            res.cookie("rt", rt, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true, })
+
+            let { nickName, avartar, gameId, isRegSale, isAdmin, balance } = userFound
+            let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance }
             return res.status(200).json({
                 message: "ok",
-                userFound: JSON.stringify(userFound)
+                userData
             })
 
 
@@ -129,7 +151,6 @@ class AuthController {
 
             return res.status(200).json({
                 message: "ok",
-                data: JSON.stringify({ userName, hashPassWord, nickName })
             })
 
 
