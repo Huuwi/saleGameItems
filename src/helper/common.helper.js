@@ -90,7 +90,6 @@ class CommonHelper {
         } catch (error) {
             return { state: false, message: "unknown error!", error }
         }
-
     }
 
 
