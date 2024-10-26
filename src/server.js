@@ -3,9 +3,16 @@ const dotenv = require("dotenv").config({ path: "./.env" })
 const { configServer } = require("./config/configServer.js")
 const { api } = require("./api/api.js")
 const { Connection } = require("./database/connection.js")
+
+
+//global variables
 globalThis.connection = new Connection()
 globalThis.connection.connect()
 globalThis.captchaOfIpAddress = new Map()
+globalThis.tokenOfUserId = new Map()
+
+
+
 //create server and config
 const server = express()
 configServer(server)
