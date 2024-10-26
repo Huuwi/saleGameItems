@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-
+const dotenv = require("dotenv").config({ path: "../../.env" })
 
 class AuthHelper {
 

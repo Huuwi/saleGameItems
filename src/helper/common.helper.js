@@ -47,8 +47,10 @@ class CommonHelper {
                     }
                     base64 = canvas.toDataURL("image/png")
                 })
+            console.log(text);
 
-            fs.writeFileSync("./captcha.png", base64, { encoding: "base64" })
+
+            // fs.writeFileSync("./captcha.png", base64, { encoding: "base64" })
 
             globalThis.captchaOfIpAddress.set(ipAddress, { text, date: Date.now() + 60 * 1000 })
 
