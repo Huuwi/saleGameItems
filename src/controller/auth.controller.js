@@ -5,7 +5,7 @@ const CommonHelper = require("../helper/common.helper.js")
 let commonHelper = new CommonHelper()
 
 const AuthHelper = require("../helper/auth.helper.js")
-let autHelper = new AuthHelper()
+let authHelper = new AuthHelper()
 
 class AuthController {
 
@@ -58,8 +58,8 @@ class AuthController {
             }
             let userId = userFound.userId
 
-            let at = autHelper.generatorAccessToken({ userId }).at
-            let rt = autHelper.generatorRefreshToken({ userId }).rt
+            let at = authHelper.generatorAccessToken({ userId }).at
+            let rt = authHelper.generatorRefreshToken({ userId }).rt
 
 
             globalThis.tokenOfUserId.set(userId, {
@@ -167,6 +167,94 @@ class AuthController {
 
     }
 
+    async getInforUser(req, res) {
+
+        try {
+            let userId = req?.decodeAccessToken?.userId
+
+            if (!userId) {
+                res.status(400).json({
+                    message: "not found userId!"
+                })
+            }
+
+            let userFound = await globalThis.connection.executeQuery("select * from user where userId = ?", [userId])
+                .then((res) => {
+                    return res[0]
+                })
+
+            if (!userFound) {
+                return res.status(400).json({
+                    message: "not found user!"
+                })
+            }
+
+            let { password, ...userData } = userFound
+
+            return res.status(200).json({
+                message: "ok",
+                userData
+            })
+
+
+        } catch (error) {
+
+            console.log("err when getInforUser : ", error);
+            res.status(500).json({
+                message: "have wrong!"
+            })
+
+        }
+    }
+
+    getNewAccessToken(req, res) {
+
+        try {
+
+            let rt = req.cookies?.rt
+
+            console.log("get new access : ", req.cookies);
+
+
+            if (!rt) {
+                return res.status(400).json({
+                    message: "not found refresh token!"
+                })
+            }
+
+            let validRefreshToken = authHelper.verifyRefreshToken(rt)
+
+            if (!validRefreshToken?.state) {
+                return res.status(400).json({
+                    message: validRefreshToken.message
+                })
+            }
+
+            let tokenOfUserId = globalThis.tokenOfUserId.get(validRefreshToken?.decodeRefreshToken?.userId)
+
+            if (tokenOfUserId?.rt != rt) {
+                res.cookie("rt", "")
+                return res.status(400).json({
+                    message: "old refresh token!"
+                })
+            }
+
+            let newAt = authHelper.generatorAccessToken({ userId: validRefreshToken?.decodeRefreshToken?.userId })
+
+            res.cookie("at", newAt, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true })
+
+            return res.status(200).json({
+                message: "ok"
+            })
+
+        } catch (error) {
+            console.log("err when getNewAccessToken : ", error);
+            res.status(500).json({
+                message: "have wrong!"
+            })
+        }
+
+    }
 
 
 }

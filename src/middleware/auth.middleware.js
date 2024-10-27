@@ -6,23 +6,38 @@ let authHelper = new AuthHelper()
 
 class AuthMiddleWare {
 
-    async decodeAccessToken(req, res, next) {
+    checkInforAccessToken(req, res, next) {
         try {
             req.decodeAccessToken = {}
-            let validAccessToken = authHelper.verifyAccessToken(req?.cookies?.at)
+
+            let at = req?.cookies?.at
+
+
+
+            if (!at?.length) {
+                return res.status(400).json({
+                    message: "not found token!"
+                })
+            }
+
+            let validAccessToken = authHelper.verifyAccessToken(at)
 
             if (!validAccessToken?.state) {
                 return res.status(400).json({
-                    message: "invalid access !"
+                    message: validAccessToken.message
                 })
             }
             req.decodeAccessToken = validAccessToken.decodeAccessToken
 
-            if (req?.cookies?.at != globalThis.tokenOfUserId.get(req.decodeAccessToken.userId)) {
+
+
+            if (req.cookies?.at != globalThis.tokenOfUserId.get(req.decodeAccessToken?.userId).at) {
+                res.cookie("at", "")
                 return res.status(400).json({
-                    message: "old token!"
+                    message: "old access token!"
                 })
             }
+
 
             next()
 
@@ -36,7 +51,6 @@ class AuthMiddleWare {
         }
 
     }
-
 
 
 }

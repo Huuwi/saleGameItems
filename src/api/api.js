@@ -21,8 +21,11 @@ api.get("/", (req, res) => {
 api.post("/getNewCaptcha", commonController.getNewCaptcha)
 api.post("/login", authController.login)
 api.post("/register", authController.register)
+api.post("/getNewAccessToken", authController.getNewAccessToken)
 
+api.use("/auth", authMiddleWare.checkInforAccessToken)
 
-api.use("/auth", authMiddleWare.decodeAccessToken)
+api.post("/auth/getInforUser", authController.getInforUser)
+
 
 module.exports = { api }
