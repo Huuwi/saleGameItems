@@ -27,9 +27,6 @@ const main = async () => {
     //     userIdFollowed int
     // );`)
 
-
-
-
     // await connection.executeQuery(`CREATE TABLE transaction (
     //     transactionId int primary key not null auto_increment,
     //     userId int,
@@ -73,7 +70,7 @@ const main = async () => {
     //     price double
     // );`)
 
-
+    await connection.executeQuery
 }
 
 main()
