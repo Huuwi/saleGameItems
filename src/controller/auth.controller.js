@@ -213,7 +213,6 @@ class AuthController {
 
             let rt = req.cookies?.rt
 
-            console.log("get new access : ", req.cookies);
 
 
             if (!rt) {
@@ -241,7 +240,8 @@ class AuthController {
 
             let newAt = authHelper.generatorAccessToken({ userId: validRefreshToken?.decodeRefreshToken?.userId })
 
-            res.cookie("at", newAt, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true })
+            tokenOfUserId.at = newAt.at
+            res.cookie("at", newAt.at, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true })
 
             return res.status(200).json({
                 message: "ok"

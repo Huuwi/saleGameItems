@@ -31,7 +31,7 @@ class AuthMiddleWare {
 
 
 
-            if (req.cookies?.at != globalThis.tokenOfUserId.get(req.decodeAccessToken?.userId).at) {
+            if (req.cookies?.at != globalThis.tokenOfUserId.get(req.decodeAccessToken?.userId)?.at) {
                 res.cookie("at", "")
                 return res.status(400).json({
                     message: "old access token!"
