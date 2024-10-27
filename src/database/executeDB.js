@@ -56,7 +56,8 @@ const main = async () => {
     // await connection.executeQuery(`CREATE TABLE item (
     //     itemId int primary key not null auto_increment,
     //     gameId int,
-    //     image varchar(255) default 'https://th.bing.com/th/id/OIP.4u4taK5oLHElvRz5jz7YjAAAAA?rs=1&pid=ImgDetMain'
+    //     image varchar(255) default 'https://th.bing.com/th/id/OIP.4u4taK5oLHElvRz5jz7YjAAAAA?rs=1&pid=ImgDetMain',
+    //     itemType int
     // );`)
 
     // await connection.executeQuery(`CREATE TABLE gameAccount (
@@ -72,6 +73,9 @@ const main = async () => {
     //     idItem int,
     //     price double
     // );`)
+
+
+
 
 
 }

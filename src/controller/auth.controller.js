@@ -50,8 +50,14 @@ class AuthController {
                 })
 
 
+            if (!userFound) {
+                return res.status(400).json({
+                    message: "not found user!"
+                })
+            }
 
-            if (!bcrypt.compareSync(passWord, userFound.password)) {
+
+            if (!bcrypt.compareSync(passWord, userFound?.password)) {
                 return res.status(400).json({
                     message: "password is not correct!"
                 })
