@@ -1,30 +1,45 @@
-const express = require("express")
-const dotenv = require("dotenv").config({ path: "./.env" })
-const { configServer } = require("./config/configServer.js")
-const { api } = require("./api/api.js")
-const { Connection } = require("./database/connection.js")
+const express = require("express");
+require("dotenv").config({ path: "./.env" });
+const { configApp } = require("./config/configAppExpress.js");
+const { api } = require("./api/api.js");
+const { Connection } = require("./database/connection.js");
+const { createServer } = require("http");
+const SocketIo = require("./socketIo/socket.io.js");
+const { configSocketIo } = require("./config/configSocketIo.js");
 
+// Global variables
+globalThis.connection = new Connection();
+globalThis.connection.connect();
+globalThis.captchaOfIpAddress = new Map();
+globalThis.tokenOfUserId = new Map();
 
-//global variables
-globalThis.connection = new Connection()
-globalThis.connection.connect()
-globalThis.captchaOfIpAddress = new Map()
-globalThis.tokenOfUserId = new Map()
+// Create app and config
+const app = express();
+configApp(app);
 
+const httpServer = createServer(app);
+const io = new SocketIo(httpServer, configSocketIo);
+globalThis.io = io; // Global io
 
+// Use proper connection event for Socket.IO
+io.on("connection", (socket) => {
+    console.log("Client connected:", socket.id);
 
-//create server and config
-const server = express()
-configServer(server)
+    socket.on("message", (msg) => {
+        console.log(`Message from ${socket.id}:`, msg);
+        io.emit("message", msg);  // Broadcast message
+    });
 
+    socket.on("disconnect", () => {
+        console.log(`Client disconnected: ${socket.id}`);
+    });
+});
 
-//use api route
-server.use("/api", api)
+// Use API route
+app.use("/api", api);
 
-
-
-//running server
-let PORT = process.env.PORT || 8000
-server.listen(PORT, () => {
-    console.log("server is running on port : ", PORT);
-})
+// Run the app
+let PORT = process.env.PORT || 8000;
+httpServer.listen(PORT, () => {
+    console.log("httpServer is running on port:", PORT);
+});

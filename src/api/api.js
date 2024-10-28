@@ -27,5 +27,7 @@ api.use("/auth", authMiddleWare.checkInforAccessToken)
 
 api.post("/auth/getInforUser", authController.getInforUser)
 
+api.post("/auth/getSalingItemList", commonController.getSalingItemList)
+
 
 module.exports = { api }

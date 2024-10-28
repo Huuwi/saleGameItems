@@ -1,11 +1,11 @@
 const express = require("express")
-const dotenv = require("dotenv").config({ path: "./.env" })
+require("dotenv").config({ path: "./.env" })
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const urls = ["http://localhost5173", process.env.FONT_END_URL]
 
 
-const configServer = (server) => {
+const configApp = (server) => {
     server.use(cookieParser())
     server.use(express.json())
     server.use(express.static("./src/public"))
@@ -16,5 +16,5 @@ const configServer = (server) => {
     }))
 }
 
-module.exports = { configServer }
+module.exports = { configApp }
 
