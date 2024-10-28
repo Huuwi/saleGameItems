@@ -2,8 +2,6 @@ const CommonHelper = require("../helper/common.helper.js")
 let commonHelper = new CommonHelper()
 
 
-
-
 class CommonController {
 
     async getNewCaptcha(req, res) {
@@ -42,8 +40,28 @@ class CommonController {
 
     }
 
-
-
+    async getSalingItemList(req, res) {
+        try {
+            let salingItemListData = await globalThis.connection.executeQuery('SELECT * FROM item WHERE isSaling = 1')
+                .then(data => { return data })
+                .catch(err => console.log(err))
+            if (!salingItemListData?.length) {
+                return res.status(501).json({
+                    message: 'Cannot get salingItemListData'
+                })
+            }
+            return res.status(200).json({
+                message: 'ok',
+                salingItemListData
+            })
+        }
+        catch (err) {
+            console.log(`Error when getSalingItemList: ${err}`);
+            res.status(500).json({
+                message: 'Have wrong'
+            })
+        }
+    }
 }
 
 
