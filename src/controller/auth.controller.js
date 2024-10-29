@@ -80,7 +80,8 @@ class AuthController {
             let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance }
             return res.status(200).json({
                 message: "ok",
-                userData
+                userData,
+                at
             })
 
 
@@ -256,7 +257,7 @@ class AuthController {
         } catch (error) {
             console.log("err when getNewAccessToken : ", error);
             res.status(500).json({
-                message: "have wrong!"
+                message: "have wrong!", at: newAt
             })
         }
 

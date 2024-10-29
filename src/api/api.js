@@ -29,5 +29,11 @@ api.post("/auth/getInforUser", authController.getInforUser)
 
 api.post("/auth/getSalingItemList", commonController.getSalingItemList)
 
+api.get("/testSocket", (req, res) => {
+    globalThis.io.sockets.emit("message", Math.random())
+    res.status(200).json({
+        message: "ok"
+    })
+})
 
 module.exports = { api }

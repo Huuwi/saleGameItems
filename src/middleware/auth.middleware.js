@@ -12,8 +12,6 @@ class AuthMiddleWare {
 
             let at = req?.cookies?.at
 
-
-
             if (!at?.length) {
                 return res.status(400).json({
                     message: "not found token!"
@@ -29,15 +27,12 @@ class AuthMiddleWare {
             }
             req.decodeAccessToken = validAccessToken.decodeAccessToken
 
-
-
-            if (req.cookies?.at != globalThis.tokenOfUserId.get(req.decodeAccessToken?.userId)?.at) {
+            if (at != globalThis.tokenOfUserId.get(req.decodeAccessToken?.userId)?.at) {
                 res.cookie("at", "")
                 return res.status(400).json({
                     message: "old access token!"
                 })
             }
-
 
             next()
 

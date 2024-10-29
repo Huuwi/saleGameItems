@@ -12,6 +12,8 @@ globalThis.connection = new Connection();
 globalThis.connection.connect();
 globalThis.captchaOfIpAddress = new Map();
 globalThis.tokenOfUserId = new Map();
+globalThis.socketOfUserId = new Map();
+
 
 // Create app and config
 const app = express();

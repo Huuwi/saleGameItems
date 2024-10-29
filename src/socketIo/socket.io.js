@@ -1,9 +1,14 @@
+const AuthHelper = require("../helper/auth.helper.js");
+const authHelper = new AuthHelper();
 const { Server } = require("socket.io");
 
 class SocketIo extends Server {
     constructor(httpServer, configSocketIo) {
         super(httpServer, configSocketIo);
-        this.middlewares = []; // Danh sách middleware cho socket
+
+        this.activeSockets = new Map();
+
+        this.use(this.validateToken.bind(this));
 
         // Lắng nghe sự kiện kết nối
         this.on("connection", (socket) => this.handleConnection(socket));
@@ -12,81 +17,67 @@ class SocketIo extends Server {
     }
 
     /**
-     * Xử lý sự kiện kết nối từ client
+     * Middleware xác thực token trong quá trình handshake
      */
-    handleConnection(socket) {
-        console.log(`Client connected: ${socket.id}`);
+    validateToken(socket, next) {
+        try {
+            const at = socket.handshake?.auth?.at;
+            if (!at) {
+                return next(this.createError("missing token", 401));
+            }
 
-        // Gọi tất cả middleware trước khi xử lý sự kiện
-        this.runMiddlewares(socket);
+            const validAccessToken = authHelper.verifyAccessToken(at);
+            if (!validAccessToken?.state) {
+                return next(this.createError(validAccessToken.message, 403));
+            }
 
-        // Xử lý khi client ngắt kết nối
-        socket.on("disconnect", () => {
-            console.log(`Client disconnected: ${socket.id}`);
-        });
-    }
+            const { userId } = validAccessToken.decodeAccessToken;
 
-    /**
-     * Chạy tất cả middleware cho một socket
-     */
-    runMiddlewares(socket) {
-        this.middlewares.forEach((middleware) => middleware(socket));
-    }
+            // Kiểm tra xem token có phải là bản mới nhất không
+            const storedToken = globalThis.tokenOfUserId.get(userId)?.at;
+            if (at !== storedToken) {
+                return next(this.createError("old token detected", 403));
+            }
 
-    /**
-     * Đăng ký middleware cho tất cả socket
-     */
-    useMiddleware(middleware) {
-        this.middlewares.push(middleware);
-    }
+            // Gắn userId vào socket để tái sử dụng trong các sự kiện khác
+            socket.userId = userId;
 
-    /**
-     * Phát tin nhắn tới tất cả các client (broadcast)
-     */
-    broadCastMessage(message) {
-        this.emit("message", message);
-    }
-
-    /**
-     * Gửi tin nhắn đến một client cụ thể bằng socketId
-     */
-    sendMessageToSocketId(message, socketId) {
-        const socket = this.sockets.sockets.get(socketId);
-        if (socket) {
-            socket.emit("message", message);
-        } else {
-            console.log("Socket ID not found: " + socketId);
+            next(); // Tiếp tục nếu hợp lệ
+        } catch (error) {
+            next(this.createError("Internal Server Error", 500));
         }
     }
 
     /**
-     * Gửi tin nhắn đến một room cụ thể
+     * Xử lý khi kết nối thành công
      */
-    sendMessageToRoom(room, event, message) {
-        this.to(room).emit(event, message);
+    handleConnection(socket) {
+        const { userId } = socket;
+
+        // Lưu socketId tương ứng với userId
+        globalThis.tokenOfUserId.set(userId, { at: socket.handshake.auth.at, socketId: socket.id });
+
+        console.log(`User ${userId} connected with socketId: ${socket.id}`);
+
+        // Xử lý sự kiện ngắt kết nối
+        socket.on("disconnect", () => this.handleDisconnect(socket));
     }
 
     /**
-     * Đăng ký sự kiện tùy chỉnh cho tất cả các client
+     * Xử lý sự kiện ngắt kết nối
      */
-    registerGlobalEvent(eventName, callBack) {
-        this.on(eventName, callBack);
+    handleDisconnect(socket) {
+        const { userId } = socket;
+        console.log(`User ${userId} disconnected (socketId: ${socket.id})`);
+
+        // Xóa socketId khi user ngắt kết nối
+        globalThis.tokenOfUserId.delete(userId);
     }
 
-    /**
-     * Thêm socket vào một room
-     */
-    addSocketToRoom(socket, room) {
-        socket.join(room);
-        console.log(`Socket ${socket.id} joined room ${room}`);
-    }
-
-    /**
-     * Loại bỏ socket khỏi một room
-     */
-    removeSocketFromRoom(socket, room) {
-        socket.leave(room);
-        console.log(`Socket ${socket.id} left room ${room}`);
+    createError(message, statusCode) {
+        const error = new Error(message);
+        error.status = statusCode;
+        return error;
     }
 }
 
