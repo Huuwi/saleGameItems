@@ -42,7 +42,24 @@ class CommonController {
 
     async getSalingItemList(req, res) {
         try {
-            let salingItemListData = await globalThis.connection.executeQuery('SELECT * FROM item WHERE isSaling = 1')
+            let salingItemListData = await globalThis.connection.executeQuery(`SELECT 
+    user.userId,
+    user.nickName,
+    user.avartar,  -- Thêm avatar vào SELECT
+    gameAccount.userNameGame,
+    gameAccount.passWordGame,
+    item.itemId,
+    item.name,
+    item.description,
+    item.image
+FROM 
+    user
+LEFT JOIN 
+    gameAccount ON user.userId = gameAccount.userId
+LEFT JOIN 
+    item ON gameAccount.gameId = item.gameId;
+
+            `)
                 .then(data => { return data })
                 .catch(err => console.log(err))
             if (!salingItemListData?.length) {
