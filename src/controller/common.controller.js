@@ -46,14 +46,14 @@ class CommonController {
     SELECT 
     user.userId,
     user.nickName,
-    user.avartar,  -- Thêm avatar vào SELECT
+    user.avartar, 
     gameAccount.userNameGame,
     gameAccount.passWordGame,
     item.itemId,
     item.name,
     item.description,
     item.image,
-    itemSalling.price  -- Thêm price từ bảng itemSalling
+    itemSalling.price  
 FROM 
     user
 LEFT JOIN 
@@ -61,7 +61,7 @@ LEFT JOIN
 LEFT JOIN 
     item ON gameAccount.gameId = item.gameId
 LEFT JOIN 
-    itemSalling ON item.itemId = itemSalling.itemId;  -- Thêm join với itemSalling
+    itemSalling ON item.itemId = itemSalling.itemId; 
 
 
             `)

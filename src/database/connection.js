@@ -40,7 +40,7 @@ class Connection {
     async executeQuery(statement, placeholders = []) {
         try {
             const [results] = await this.connection.query(statement, placeholders);
-            console.log("Execute success statement: ", statement);
+            console.log("Execute success statement ");
             return results;
         } catch (error) {
             console.log("Execute fail statement: ", statement, " placeholders: ", placeholders.join("  "), "error: ", error);
