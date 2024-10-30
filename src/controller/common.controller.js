@@ -42,7 +42,8 @@ class CommonController {
 
     async getSalingItemList(req, res) {
         try {
-            let salingItemListData = await globalThis.connection.executeQuery(`SELECT 
+            let salingItemListData = await globalThis.connection.executeQuery(` 
+    SELECT 
     user.userId,
     user.nickName,
     user.avartar,  -- Thêm avatar vào SELECT
@@ -51,13 +52,17 @@ class CommonController {
     item.itemId,
     item.name,
     item.description,
-    item.image
+    item.image,
+    itemSalling.price  -- Thêm price từ bảng itemSalling
 FROM 
     user
 LEFT JOIN 
     gameAccount ON user.userId = gameAccount.userId
 LEFT JOIN 
-    item ON gameAccount.gameId = item.gameId;
+    item ON gameAccount.gameId = item.gameId
+LEFT JOIN 
+    itemSalling ON item.itemId = itemSalling.itemId;  -- Thêm join với itemSalling
+
 
             `)
                 .then(data => { return data })
