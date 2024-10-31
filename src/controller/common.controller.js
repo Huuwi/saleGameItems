@@ -43,27 +43,19 @@ class CommonController {
     async getSalingItemList(req, res) {
         try {
             let salingItemListData = await globalThis.connection.executeQuery(` 
-    SELECT 
-    user.userId,
-    user.nickName,
-    user.avartar, 
-    gameAccount.userNameGame,
-    gameAccount.passWordGame,
-    item.itemId,
-    item.name,
-    item.description,
-    item.image,
-    itemSalling.price  
-FROM 
-    user
-LEFT JOIN 
-    gameAccount ON user.userId = gameAccount.userId
-LEFT JOIN 
-    item ON gameAccount.gameId = item.gameId
-LEFT JOIN 
-    itemSalling ON item.itemId = itemSalling.itemId; 
-
-
+           SELECT 
+            i.name,
+            i.description,
+            i.image,
+            i.itemType,
+            its.price,
+            u.nickName,
+            u.avartar,
+            u.userId
+            FROM user u
+            JOIN gameAccount ga ON u.userId = ga.userId
+            JOIN item i ON ga.gameId = i.gameId
+            JOIN itemSalling its ON i.itemId = its.itemId;
             `)
                 .then(data => { return data })
                 .catch(err => console.log(err))

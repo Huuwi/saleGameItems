@@ -81,10 +81,85 @@ const main = async () => {
 
     // }
 
+
+
+    // await connection.executeQuery("update gameAccount set userId = 4 where userNameGame = 'gameAccount3' ")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // await connection.executeQuery("update user set gameId = 5 where userName = '20226037371' ")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // await connection.executeQuery("update gameAccount set userId = 5 where userNameGame = 'gameAccount4' ")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // await connection.executeQuery("update item set gameId = ?", [2 + Math.floor(Math.random() * 4)])
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // for (let i = 2; i < 107; i++) {
+    //     if (i % 6 == 0) {
+    //         await connection.executeQuery("update item set gameId = ? where itemId = ?", [6, i])
+    //             .then((e) => {
+    //                 console.log(e);
+    //             })
+    //     }
+
+    // }
+
+
+
+    // await connection.executeQuery("select gameId , itemId , name from item")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // await connection.executeQuery("select item.itemId , name , price from itemSalling inner join item on item.itemId = itemSalling.itemId order by item.itemId ")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    // await connection.executeQuery("select itemId , name , gameId from item order by itemId ")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
+    await connection.executeQuery(`
+       SELECT 
+            i.name,
+            i.description,
+            i.image,
+            i.itemType,
+            its.price,
+            u.nickName,
+            u.avartar,
+            u.userId
+            FROM user u
+            JOIN gameAccount ga ON u.userId = ga.userId
+            JOIN item i ON ga.gameId = i.gameId
+            JOIN itemSalling its ON i.itemId = its.itemId;
+        `)
+        .then((e) => {
+            fs.writeFileSync("../../test.json", JSON.stringify(e))
+            console.log(e);
+        })
+
+
     // await connection.executeQuery("select * from item")
     //     .then((e) => {
     //         console.log(e);
     //     })
+    // await connection.executeQuery("select * from itemSalling")
+    //     .then((e) => {
+    //         console.log(e);
+    //     })
+
 
     // for (let i = 0; i < 50; i++) {
     //     await connection.executeQuery("insert into itemSalling (itemId , price) values (?,?)", [i, Math.floor(Math.random() * 100) + 200 + Math.floor(Math.random() * 100)])
