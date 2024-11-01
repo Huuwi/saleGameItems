@@ -1,9 +1,6 @@
 const AuthHelper = require('../helper/auth.helper.js')
 let authHelper = new AuthHelper()
 
-
-
-
 class AuthMiddleWare {
 
     checkInforAccessToken(req, res, next) {
