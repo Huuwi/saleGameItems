@@ -76,6 +76,41 @@ class CommonController {
             })
         }
     }
+
+    async linkAccount(req, res) {
+        let userId = req.decodeAccessToken.userId;
+
+        let { userNameGame, passWordGame, text } = req.body;
+
+        if (!userNameGame || !passWordGame || !text) {
+            return res.status(400).json({
+                message: "missing data!",
+            })
+        }
+
+        let ipAddress = req.ip || req.headers["x-forwarded-for"]
+        let valid = commonHelper.verifyCaptcha(ipAddress, text)
+
+        if (!valid?.state) {
+            return res.status(400).json({
+                message: valid.message,
+            })
+        }
+
+        let charactersNotValid = ["`", '"', "`"]
+        for (let e of charactersNotValid) {
+            if (userName.includes(e)) {
+                return res.status(400).json({
+                    message: `can't include characters :  ${charactersNotValid.join(" ,")}`
+                })
+            }
+        }
+
+
+
+
+
+    }
 }
 
 

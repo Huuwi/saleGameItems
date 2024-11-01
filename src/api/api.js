@@ -28,6 +28,7 @@ api.use("/auth", authMiddleWare.checkInforAccessToken)
 api.post("/auth/getInforUser", authController.getInforUser)
 
 api.post("/auth/getSalingItemList", commonController.getSalingItemList)
+api.post("/auth/linkAccount", commonController.linkAccount)
 
 api.get("/testSocket", (req, res) => {
     globalThis.io.sockets.emit("message", Math.random())
