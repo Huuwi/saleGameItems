@@ -31,8 +31,6 @@ class AuthController {
             }
 
             let charactersNotValid = ["`", '"', "`"]
-
-
             for (let e of charactersNotValid) {
                 if (userName.includes(e)) {
                     return res.status(400).json({
@@ -180,7 +178,7 @@ class AuthController {
             let userId = req?.decodeAccessToken?.userId
 
             if (!userId) {
-                res.status(400).json({
+                return res.status(400).json({
                     message: "not found userId!"
                 })
             }

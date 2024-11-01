@@ -1,10 +1,12 @@
 const api = require("express").Router()
 const CommonController = require("../controller/common.controller.js")
 const AuthController = require("../controller/auth.controller.js")
-
 const AuthMiddleWare = require("../middleware/auth.middleware.js")
-const authMiddleWare = new AuthMiddleWare()
+const ManageInventoryController = require("../controller/manageInventory.controler.js")
 
+
+const manageInventoryController = new ManageInventoryController()
+const authMiddleWare = new AuthMiddleWare()
 let commonController = new CommonController()
 let authController = new AuthController()
 
@@ -18,17 +20,24 @@ api.get("/", (req, res) => {
     )
 })
 
+api.use("/auth", authMiddleWare.checkInforAccessToken)
+
+
+
 api.post("/getNewCaptcha", commonController.getNewCaptcha)
 api.post("/login", authController.login)
 api.post("/register", authController.register)
 api.post("/getNewAccessToken", authController.getNewAccessToken)
-
-api.use("/auth", authMiddleWare.checkInforAccessToken)
-
 api.post("/auth/getInforUser", authController.getInforUser)
-
 api.post("/auth/getSalingItemList", commonController.getSalingItemList)
 api.post("/auth/linkAccount", commonController.linkAccount)
+api.post("/auth/getInventories", manageInventoryController.getInventories)
+api.post("/auth/cancelSalling", manageInventoryController.cancelSalling)
+api.post("/auth/cancelSalling", manageInventoryController.purchaseItem)
+
+// api.post("/auth/addItemSalling", manageInventoryController.addItemSalling)
+// api.post("/auth/unLinkAccount", commonController.unLinkAccount)
+
 
 api.get("/testSocket", (req, res) => {
     globalThis.io.sockets.emit("message", Math.random())
