@@ -33,7 +33,7 @@ api.post("/auth/getSalingItemList", commonController.getSalingItemList)
 api.post("/auth/linkAccount", commonController.linkAccount)
 api.post("/auth/getInventories", manageInventoryController.getInventories)
 api.post("/auth/cancelSalling", manageInventoryController.cancelSalling)
-api.post("/auth/cancelSalling", manageInventoryController.purchaseItem)
+api.post("/auth/purchaseItem", manageInventoryController.purchaseItem)
 
 // api.post("/auth/addItemSalling", manageInventoryController.addItemSalling)
 // api.post("/auth/unLinkAccount", commonController.unLinkAccount)
