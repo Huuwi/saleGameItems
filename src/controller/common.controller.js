@@ -166,6 +166,53 @@ class CommonController {
 
     }
 
+    async unLinkAccount(req, res) {
+
+        try {
+
+            let userId = req.decodeAccessToken?.userId;
+
+            let userDataFound = await globalThis.connection.executeQuery(`
+                    select * from user 
+                    join gameAccount on user.userId = gameAccount.userId
+                    where userId = ${userId}
+                `)
+                .then((data) => {
+                    return data[0]
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            if (!userDataFound) {
+                return res.status(400).json({
+                    message: "not found linked account!"
+                })
+            }
+
+            await globalThis.connection.executeQuery(`update user set gameId = -1 where userId = ${userDataFound.userId}`)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            await globalThis.connection.executeQuery(`update gameAccount set userId = ${null} where gameId = ${userDataFound.gameId}`)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            return res.status(200).json({
+                message: "ok"
+            })
+
+        } catch (error) {
+            console.log("err when unLinkAccount : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+
+        }
+
+    }
 
 
 

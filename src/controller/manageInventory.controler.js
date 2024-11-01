@@ -183,6 +183,69 @@ class ManageInventoryController {
         }
     }
 
+    async addItemSalling(req, res) {
+
+        try {
+            let userId = Number(req?.decodeAccessToken?.userId)
+            let itemId = Number(req.body.itemId)
+            let price = Number(req.body.price)
+            if (!userId || !price || !itemId) {
+                return res.status(400).json({
+                    message: "data sent not valid!"
+                })
+            }
+
+            let itemFound = await globalThis.connection.executeQuery(`
+                    select * from user
+                    join gameAccount on gameAccount.userId = user.userId
+                    join item on item.itemId = gameAccount.itemId
+                    join itemSalling on itemSalling.itemId = item.itemId
+                    where item.itemId = ${itemId}
+                `)
+                .then((data) => {
+                    return data[0]
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            if (!itemFound) {
+                return res.status(400).json({
+                    message: "not found item valid!"
+                })
+            }
+
+            if (itemFound.price) {
+                return res.status(400).json({
+                    message: "item already salling!"
+                })
+            }
+
+            await globalThis.connection.executeQuery(`insert into itemSalling (itemId , price) values (?,?)`, [itemId, price])
+                .catch((e) => {
+                    throw new Error(e)
+                })
+            return res.status(200).json({
+                message: "ok"
+            })
+
+
+        } catch (error) {
+            console.log("err when addItemSalling : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+
+        }
+
+    }
+
+    async getInventoriesOfuserId(req, res) {
+
+    }
+
+
+
 }
 
 
