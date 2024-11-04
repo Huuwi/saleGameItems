@@ -1,3 +1,4 @@
+const { compare } = require("bcryptjs")
 const { Connection } = require("../database/connection.js")
 require("dotenv").config({ path: "../../.env" })
 
@@ -60,16 +61,37 @@ const main = async () => {
     //     `)
 
 
-
-
     //----------------------------------------------------------------------------------------------------------------------------------
 
 
-    // await connection.executeQuery("select * from itemSalling")
+    // await connection.executeQuery("select * from item")
     //     .then((e) => {
+    //         fs.writeFileSync("../../testdata.json", JSON.stringify(e))
     //         console.log(e);
     //     })
 
+    let data = fs.readFileSync("../../test.json", "utf-8")
+    data = JSON.parse(data)
+
+
+    // for (let e of data) {
+    //     await connection.executeQuery(`insert into item (image,name,description,gameId,itemType) values(?,?,?,?,?) `, [e.image, e.name, e.description, 1 + Math.floor(Math.random() * 9), 3])
+    // }
+
+    for (let i = 154; i <= 321; i++) {
+        await connection.executeQuery(`update item set description = '${data[i - 154].replaceAll("'", "`")}' where itemId = ${i} `, [i, 700 + 5 * Math.floor(Math.random() * 100)])
+    }
+    // await connection.executeQuery("select name , itemId from item").then((data) => {
+    //     fs.writeFileSync("../../testdata.json", JSON.stringify(data))
+    // })
+
+    // await connection.executeQuery("update item set image = 'https://th.bing.com/th/id/OIP.5QvXhXYndFUxOCwmC13AlQHaHa?rs=1&pid=ImgDetMain' , name = 'Pankia' where itemId = 382  ")
+
+    //154-321
+
+    await connection.executeQuery("select name , description from item where itemType = 2").then((data) => {
+        fs.writeFileSync("../../testdata.json", JSON.stringify(data))
+    })
 
 
 

@@ -56,7 +56,8 @@ class CommonController {
             FROM user u
             JOIN gameAccount ga ON u.userId = ga.userId
             JOIN item i ON ga.gameId = i.gameId
-            JOIN itemSalling its ON i.itemId = its.itemId;
+            JOIN itemSalling its ON i.itemId = its.itemId
+            ;
             `)
                 .then(data => { return data })
                 .catch(err => console.log(err))

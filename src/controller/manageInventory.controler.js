@@ -32,7 +32,7 @@ class ManageInventoryController {
 
             return res.status(200).json({
                 message: "ok",
-                userId
+                dataInventories: JSON.stringify(dataInventories)
             })
 
 
