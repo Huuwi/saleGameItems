@@ -3,12 +3,14 @@ const CommonController = require("../controller/common.controller.js")
 const AuthController = require("../controller/auth.controller.js")
 const AuthMiddleWare = require("../middleware/auth.middleware.js")
 const ManageInventoryController = require("../controller/manageInventory.controler.js")
+const PaymentController = require("../controller/payment.controller.js")
 
 
 const manageInventoryController = new ManageInventoryController()
 const authMiddleWare = new AuthMiddleWare()
 let commonController = new CommonController()
 let authController = new AuthController()
+let paymentController = new PaymentController()
 
 api.get("/", (req, res) => {
     const forwardedIp = req.headers['x-forwarded-for'] || req.ip
@@ -38,6 +40,10 @@ api.post("/auth/addItemSalling", manageInventoryController.addItemSalling)
 api.post("/auth/unLinkAccount", commonController.unLinkAccount)
 api.post("/auth/getInventoriesOfuserId", manageInventoryController.getInventoriesOfuserId)
 
+
+//transaction
+api.post("/auth/createPaymentLink", paymentController.createPaymentLink)
+api.post("/auth/checkPayment", paymentController.checkPayment)
 
 api.get("/testSocket", (req, res) => {
     globalThis.io.sockets.emit("message", Math.random())

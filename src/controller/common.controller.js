@@ -133,7 +133,13 @@ class CommonController {
                     console.log(e);
                 })
 
-            if (gameAccount.userId > 0) {
+            if (!gameAccount) {
+                return res.status(400).json({
+                    message: "account game not exist!"
+                })
+            }
+
+            if (gameAccount?.userId > 0) {
                 return res.status(400).json({
                     message: "account game already linked!"
                 })
