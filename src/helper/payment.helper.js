@@ -5,12 +5,19 @@ const axios = require("axios")
 class PaymentHelper {
 
     createSignature = ({ orderCode, amount, description, cancelUrl, returnUrl }, checksumKey) => {
+        console.log(checksumKey);
+
         const baseString = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
         return crypto.createHmac('sha256', checksumKey).update(baseString).digest('hex');
     };
 
     async create_payment_link({ orderCode, amount, description, cancelUrl, returnUrl }, checksumKey = process.env.checksumKey, x_client_id = process.env.x_client_id, x_api_key = process.env.x_api_key) {
         try {
+            console.log(checksumKey);
+            console.log(x_client_id);
+            console.log(x_api_key);
+
+
             const signature = this.createSignature({ orderCode, amount, description, cancelUrl, returnUrl }, checksumKey);
 
 

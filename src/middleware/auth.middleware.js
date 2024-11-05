@@ -7,7 +7,7 @@ class AuthMiddleWare {
         try {
             req.decodeAccessToken = {}
 
-            let at = req?.cookies?.at
+            let at = req.cookies?.at
 
             if (!at?.length) {
                 return res.status(400).json({
