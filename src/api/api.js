@@ -38,15 +38,17 @@ api.post("/auth/cancelSalling", manageInventoryController.cancelSalling)
 api.post("/auth/purchaseItem", manageInventoryController.purchaseItem)
 api.post("/auth/addItemSalling", manageInventoryController.addItemSalling)
 api.post("/auth/unLinkAccount", commonController.unLinkAccount)
+api.post("/auth/changeNickName", commonController.changeNickName)
 api.post("/auth/getInventoriesOfuserId", manageInventoryController.getInventoriesOfuserId)
+api.post("/auth/changePassWord", commonController.changePassWord)
 
 
 //transaction
 api.post("/auth/createPaymentLink", paymentController.createPaymentLink)
 api.post("/auth/checkPayment", paymentController.checkPayment)
 
-api.get("/testSocket", (req, res) => {
-    globalThis.io.sockets.emit("message", Math.random())
+api.post("/testSocket", (req, res) => {
+    globalThis.io.sockets.emit("message", req.body.message)
     res.status(200).json({
         message: "ok"
     })
