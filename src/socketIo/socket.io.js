@@ -11,7 +11,15 @@ class SocketIo extends Server {
         this.on("connection", (socket) => {
 
             socket.on("disconnect", () => {
-                console.log(`Client disconnected: ${socket.id}`);
+                let listSocketOfUserId = globalThis.socketOfUserId.get(socket.userId)
+
+                if (listSocketOfUserId.length == 1) {
+                    globalThis.socketOfUserId.set(socket.userId, [])
+                    return
+                }
+
+                globalThis.socketOfUserId.set(socket.userId, listSocketOfUserId.splice(listSocketOfUserId.indexOf(socket.userId), 1))
+                console.log(globalThis.socketOfUserId);
             });
         });
 
@@ -39,9 +47,16 @@ class SocketIo extends Server {
                 return next(this.createError("old token detected", 403));
             }
 
-            globalThis.socketOfUserId.set(userId, socket.id)
-            console.log(globalThis.socketOfUserId);
+            socket.userId = userId
 
+            if (!globalThis.socketOfUserId.get(userId)?.length) {
+                globalThis.socketOfUserId.set(userId, [socket.id])
+            } else {
+                globalThis.socketOfUserId.get(userId).push(socket.id)
+            }
+
+
+            console.log(globalThis.socketOfUserId);
 
             next();
         } catch (error) {

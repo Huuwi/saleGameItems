@@ -74,7 +74,21 @@ class AuthController {
             res.cookie("at", at, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true, })
             res.cookie("rt", rt, { httpOnly: true, maxAge: 3600000 * 12, sameSite: "none", secure: true, })
 
-            let { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame } = userFound
+            let userNameGame = false
+
+            if (userFound.gameId > 0) {
+                try {
+                    userNameGame = await globalThis.connection.executeQuery(`select userNameGame from gameAccount where gameId = ${userFound.gameId}`)
+                        .then((data) => {
+                            return data[0].userNameGame
+                        })
+                } catch (error) {
+
+                }
+            }
+
+            let { nickName, avartar, gameId, isRegSale, isAdmin, balance } = userFound
+
             let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame }
             return res.status(200).json({
                 message: "ok",
