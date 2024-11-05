@@ -208,6 +208,7 @@ class AuthController {
                 })
             }
 
+            let userNameGame = false
             if (userFound.gameId > 0) {
                 try {
                     userNameGame = await globalThis.connection.executeQuery(`select userNameGame from gameAccount where gameId = ${userFound.gameId}`)
