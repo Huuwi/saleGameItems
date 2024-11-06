@@ -89,7 +89,7 @@ class AuthController {
 
             let { nickName, avartar, gameId, isRegSale, isAdmin, balance } = userFound
 
-            let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame }
+            let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame, userId }
             return res.status(200).json({
                 message: "ok",
                 userData,
@@ -222,7 +222,7 @@ class AuthController {
 
             let { nickName, avartar, gameId, isRegSale, isAdmin, balance } = userFound
 
-            let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame }
+            let userData = { nickName, avartar, gameId, isRegSale, isAdmin, balance, userNameGame, userId }
             return res.status(200).json({
                 message: "ok",
                 userData

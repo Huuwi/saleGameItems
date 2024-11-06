@@ -100,8 +100,22 @@ const main = async () => {
     //     fs.writeFileSync("../../testdata.json", JSON.stringify(data))
     // })
 
-    await connection.executeQuery(`update gameAccount set userId = ${null} where userNameGame = 'test123' or userNameGame = 'gameAccount8'`).then(data => console.log(data)
-    )
+    // let avartar = [
+    //     "https://th.bing.com/th/id/OIP.q_CCvKhrcf5UuKboHsvZ1gHaEK?w=329&h=185&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    //     "https://mega.com.vn/media/news/2505_liliana-wave3.jpg",
+    //     "https://image.voh.com.vn/voh/Image/2023/12/05/voh-skin-dep-nhat-lien-quan-9.jpg",
+    //     "https://cdn.sforum.vn/sforum/wp-content/uploads/2022/07/287595346_530647468760731_997619823660877372_n.jpg",
+    //     "https://shopgarena.net/wp-content/uploads/2022/08/Nhung-hinh-Nakroth-Thu-nguyen-ve-than-Lien-Quan-dep-nhat.jpg",
+    //     "https://th.bing.com/th/id/OIP.c8nfpjAjMbJ7uLUshzNpyQHaHF?rs=1&pid=ImgDetMain",
+    //     "https://th.bing.com/th/id/OIP.w14nJ6IDeV3hHuEr8re_dgHaEK?w=273&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    //     "https://th.bing.com/th/id/OIP.E9JTElDX2_J8zScwP46TjQHaEK?rs=1&pid=ImgDetMain",
+    //     "https://th.bing.com/th/id/OIP.oon3LxxjFoswuShJBf4dpQHaEj?rs=1&pid=ImgDetMain"
+    // ]
+
+    // // await connection.executeQuery(`update user set avartar = ${null} where userNameGame = 'test123' or userNameGame = 'gameAccount8'`)
+    // for (let i = 1; i <= 10; i++) {
+    //     await connection.executeQuery(`update user set avartar = '${avartar[i % avartar.length]}' where userId = ${i}`)
+    // }
 
     await connection.disconnect()
 
