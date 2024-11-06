@@ -100,7 +100,8 @@ const main = async () => {
     //     fs.writeFileSync("../../testdata.json", JSON.stringify(data))
     // })
 
-
+    await connection.executeQuery(`update gameAccount set userId = ${null} where userNameGame = 'test123' or userNameGame = 'gameAccount8'`).then(data => console.log(data)
+    )
 
     await connection.disconnect()
 
