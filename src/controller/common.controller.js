@@ -183,8 +183,8 @@ class CommonController {
             let userDataFound = await globalThis.connection.executeQuery(`
                     select * from user 
                     join gameAccount on user.userId = gameAccount.userId
-                    where userId = ${userId}
-                `)
+                    where gameAccount.userId = ?
+                `, [userId])
                 .then((data) => {
                     return data[0]
                 })

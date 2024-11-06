@@ -11,15 +11,13 @@ class SocketIo extends Server {
         this.on("connection", (socket) => {
 
             socket.on("disconnect", () => {
-                let listSocketOfUserId = globalThis.socketOfUserId.get(socket.userId)
-
+                let listSocketOfUserId = globalThis.socketOfUserId.get(socket.userId).arraySockets
                 if (listSocketOfUserId.length == 1) {
-                    globalThis.socketOfUserId.set(socket.userId, [])
+                    globalThis.socketOfUserId.delete(socket.userId)
                     return
                 }
+                listSocketOfUserId.splice(listSocketOfUserId.indexOf(socket.id), 1)
 
-                globalThis.socketOfUserId.set(socket.userId, listSocketOfUserId.splice(listSocketOfUserId.indexOf(socket.userId), 1))
-                console.log(globalThis.socketOfUserId);
             });
         });
 
@@ -27,7 +25,7 @@ class SocketIo extends Server {
     }
 
 
-    validateToken(socket, next) {
+    async validateToken(socket, next) {
         try {
             const at = socket.handshake?.auth?.at;
             if (!at) {
@@ -47,29 +45,29 @@ class SocketIo extends Server {
                 return next(this.createError("old token detected", 403));
             }
 
+
             socket.userId = userId
 
-            if (!globalThis.socketOfUserId.get(userId)?.length) {
-                globalThis.socketOfUserId.set(userId, [socket.id])
+            if (!globalThis.socketOfUserId.get(userId)?.arraySockets?.length) {
+
+                let userInfor = await globalThis.connection.executeQuery(`select avartar , nickName,userId from user where userId = ${userId}`)
+                    .then((data) => {
+                        return data[0]
+                    })
+                    .catch((e) => {
+                        throw new Error(e)
+                    })
+
+                globalThis.socketOfUserId.set(userId, { arraySockets: [socket.id], userInfor })
             } else {
-                globalThis.socketOfUserId.get(userId).push(socket.id)
+                globalThis.socketOfUserId.get(userId).arraySockets.push(socket.id)
             }
-
-
-            console.log(globalThis.socketOfUserId);
 
             next();
         } catch (error) {
+            console.log("err when valid socket : ", error);
             next(this.createError("Internal Server Error", 500));
         }
-    }
-
-    handleDisconnect(socket) {
-        const { userId } = socket;
-        console.log(`UserId :  ${userId} disconnected (socketId: ${socket.id})`);
-
-        // Xóa socketId khi user ngắt kết nối
-        globalThis.tokenOfUserId.delete(userId);
     }
 
     createError(message, statusCode) {
