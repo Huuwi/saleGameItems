@@ -2,7 +2,7 @@ const express = require("express")
 require("dotenv").config({ path: "./.env" })
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
-const urls = ["http://localhost", process.env.FONT_END_URL]
+const urls = ["http://localhost", process.env.FONT_END_URL, "::ffff:127.0.0.1"]
 
 
 const configApp = (server) => {

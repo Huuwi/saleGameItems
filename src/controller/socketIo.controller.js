@@ -27,10 +27,22 @@ class SocketIoController {
 
             let userId = req?.decodeAccessToken?.userId
 
-            let userInfor = globalThis.socketOfUserId.get(userId).userInfor
+            let userInfor = globalThis.socketOfUserId.get(userId)?.userInfor
+
+            if (!userInfor) {
+                return res.status(400).json({
+                    message: "can't call api for this!"
+                })
+            }
+
             let { message } = req.body
 
+
             globalThis.io.emit("chat_world", JSON.stringify({ message, userInfor }))
+
+            return res.status(200).json({
+                message: "ok"
+            })
 
         } catch (error) {
             console.log("err when chatWorld : ", error);

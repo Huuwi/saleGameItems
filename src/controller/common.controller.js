@@ -323,6 +323,49 @@ class CommonController {
 
     }
 
+    async searchUserByNickName(req, res) {
+
+        try {
+
+            let nickName = req.body.nickName
+
+            if (!nickName) {
+                return res.status(400).json({
+                    message: "missing data!"
+                })
+            }
+
+            let charactersNotValid = ["`", '"', "`"]
+            for (let e of charactersNotValid) {
+                if (nickName.includes(e)) {
+                    return res.status(400).json({
+                        message: `can't include characters :  ${charactersNotValid.join(" ,")}`
+                    })
+                }
+            }
+
+            let accountFounds = await globalThis.connection.executeQuery(`select userId, nickName,avartar from user where nickName = '${nickName}'`)
+                .then((data) => {
+                    return data
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            return res.status(200).json({
+                message: "ok",
+                accountFounds
+            })
+
+        } catch (error) {
+            console.log("err when searchUserByNickName : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+        }
+
+    }
+
 
 
 }

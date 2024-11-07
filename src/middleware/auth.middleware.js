@@ -5,6 +5,7 @@ class AuthMiddleWare {
 
     checkInforAccessToken(req, res, next) {
         try {
+
             req.decodeAccessToken = {}
 
             let at = req.cookies?.at

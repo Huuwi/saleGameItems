@@ -43,14 +43,15 @@ api.post("/auth/unLinkAccount", commonController.unLinkAccount)
 api.post("/auth/changeNickName", commonController.changeNickName)
 api.post("/auth/getInventoriesOfuserId", manageInventoryController.getInventoriesOfuserId)
 api.post("/auth/changePassWord", commonController.changePassWord)
+api.post("/auth/searchUserByNickName", commonController.searchUserByNickName)
 
 
 //transaction
 api.post("/auth/createPaymentLink", paymentController.createPaymentLink)
 api.post("/auth/checkPayment", paymentController.checkPayment)
 
+//socket
 api.post("/auth/testSocket", socketIoController.testSocket)
-
 api.post("/auth/chatWorld", socketIoController.chatWorld)
 
 module.exports = { api }
