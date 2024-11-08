@@ -92,7 +92,7 @@ class SocketIoController {
                 globalThis.io.to(socketRecipient).emit("recipientMessagePrivate", { message, senderInfor })
             }
 
-            await globalThis.connection.executeQuery(`insert into messages (senderUserId,recipientUserId,message) values (?,?,?)`, [senderUserId, recipientUserId, message])
+            await globalThis.connection.executeQuery(`insert into messages (senderUserId,recipientUserId,message,timeSend) values (?,?,?,?)`, [senderUserId, recipientUserId, message, Date.now()])
                 .catch((e) => {
                     throw new Error(" err when save message to DB : " + e)
                 })

@@ -373,7 +373,7 @@ class CommonController {
             let userId = req.decodeAccessToken?.userId;
 
             let dataMessages = await globalThis.connection.executeQuery(
-                `select senderUser.nickName as senderNickName , senderUser.avartar as senderAvatar , senderUser.userId as senderUserid,recipientUser.nickName as recipientNickName , recipientUser.avartar as recipientAvatar , recipientUser.userId as recipientUserid ,messOfUser.message as message from 
+                `select senderUser.nickName as senderNickName , senderUser.avartar as senderAvatar , senderUser.userId as senderUserid,recipientUser.nickName as recipientNickName , recipientUser.avartar as recipientAvatar , recipientUser.userId as recipientUserid ,messOfUser.message as message ,messOfUser.timeSend as timeSend from 
                 (select * from messages where senderUserId = ${userId} or recipientUserId = ${userId}) as messOfUser
                 join user AS senderUser
                 on senderUser.userId = messOfUser.senderUserId
@@ -396,11 +396,11 @@ class CommonController {
             let dataMessagesHandled = dataMessages.map((el) => {
                 if (el.senderUserid == userId) {
                     return {
-                        isSender: true, message: el.message, inforUser: { nickName: el.recipientNickName, avatar: el.recipientAvatar, userId: el.recipientUserid }
+                        isSender: true, message: el.message, inforUser: { nickName: el.recipientNickName, avatar: el.recipientAvatar, userId: el.recipientUserid, timeSend: el.timeSend }
                     }
                 } else {
                     return {
-                        isSender: false, message: el.message, inforUser: { nickName: el.senderNickName, avatar: el.senderAvatar, userId: el.senderUserid }
+                        isSender: false, message: el.message, inforUser: { nickName: el.senderNickName, avatar: el.senderAvatar, userId: el.senderUserid, timeSend: el.timeSend }
                     }
                 }
             })

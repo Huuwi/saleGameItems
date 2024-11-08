@@ -11,12 +11,12 @@ class SocketIo extends Server {
         this.on("connection", (socket) => {
 
             socket.on("disconnect", () => {
-                let listSocketOfUserId = globalThis.socketOfUserId.get(socket.userId).arraySockets
-                if (listSocketOfUserId.length == 1) {
+                let listSocketOfUserId = globalThis.socketOfUserId.get(socket.userId)?.arraySockets
+                if (listSocketOfUserId?.length == 1) {
                     globalThis.socketOfUserId.delete(socket.userId)
                     return
                 }
-                listSocketOfUserId.splice(listSocketOfUserId.indexOf(socket.id), 1)
+                listSocketOfUserId?.splice(listSocketOfUserId.indexOf(socket.id), 1)
 
             });
         });

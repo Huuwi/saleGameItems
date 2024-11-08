@@ -71,7 +71,8 @@ const main = async () => {
     //     messageId int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     //     senderUserId int,
     //     recipientUserId int,
-    //     message text CHARACTER SET utf8mb4
+    //     message text CHARACTER SET utf8mb4,
+    //     timeSend double
     // );`);
 
 
@@ -126,7 +127,8 @@ const main = async () => {
     //     "https://th.bing.com/th/id/OIP.oon3LxxjFoswuShJBf4dpQHaEj?rs=1&pid=ImgDetMain"
     // ]
 
-    // await connection.executeQuery(`delete from messages `)
+    await connection.executeQuery(`delete from messages `)
+
     // for (let i = 1; i <= 10; i++) {
     //     await connection.executeQuery(`update user set avartar = '${avartar[i % avartar.length]}' where userId = ${i}`)
     // }
