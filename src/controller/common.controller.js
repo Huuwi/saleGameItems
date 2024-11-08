@@ -1,3 +1,4 @@
+const e = require("cors");
 const CommonHelper = require("../helper/common.helper.js")
 let commonHelper = new CommonHelper()
 const bcrypt = require('bcryptjs');
@@ -366,6 +367,57 @@ class CommonController {
 
     }
 
+    async getDataMessagesOfUserId(req, res) {
+        try {
+
+            let userId = req.decodeAccessToken?.userId;
+
+            let dataMessages = await globalThis.connection.executeQuery(
+                `select senderUser.nickName as senderNickName , senderUser.avartar as senderAvatar , senderUser.userId as senderUserid,recipientUser.nickName as recipientNickName , recipientUser.avartar as recipientAvatar , recipientUser.userId as recipientUserid ,messOfUser.message as message from 
+                (select * from messages where senderUserId = ${userId} or recipientUserId = ${userId}) as messOfUser
+                join user AS senderUser
+                on senderUser.userId = messOfUser.senderUserId
+                join user AS recipientUser
+                on recipientUser.userId = messOfUser.recipientUserId
+            `)
+                .then((data) => {
+                    return data
+                })
+                .catch((e) => {
+                    throw new Error("err when get dataMessages from db : " + e)
+                })
+
+            if (!dataMessages?.length) {
+                return res.status(400).json({
+                    message: "not found any messages!", dataMessagesHandled: []
+                })
+            }
+
+            let dataMessagesHandled = dataMessages.map((el) => {
+                if (el.senderUserid == userId) {
+                    return {
+                        isSender: true, message: el.message, inforUser: { nickName: el.recipientNickName, avatar: el.recipientAvatar, userId: el.recipientUserid }
+                    }
+                } else {
+                    return {
+                        isSender: false, message: el.message, inforUser: { nickName: el.senderNickName, avatar: el.senderAvatar, userId: el.senderUserid }
+                    }
+                }
+            })
+            return res.status(200).json({
+                message: "ok",
+                dataMessagesHandled
+            })
+
+
+        } catch (error) {
+            console.log("err when getDataMessagesOfUserId : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+
+        }
+    }
 
 
 }

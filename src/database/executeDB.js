@@ -67,15 +67,29 @@ const main = async () => {
     //     transId varchar(100)
     // );`);
 
+    // await connection.executeQuery(`CREATE TABLE messages (
+    //     messageId int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    //     senderUserId int,
+    //     recipientUserId int,
+    //     message text CHARACTER SET utf8mb4
+    // );`);
+
 
     //----------------------------------------------------------------------------------------------------------------------------------
 
 
-    // await connection.executeQuery("select * from item")
+    // await connection.executeQuery(`select senderUser.nickName as senderNickName , senderUser.avartar as senderAvatar , senderUser.userId as senderUserid,${3} as queryUserId ,recipientUser.nickName as recipientNickName , recipientUser.avartar as recipientAvatar , recipientUser.userId as recipientUserid ,messOfUser.message as message from 
+    //     (select * from messages where senderUserId = ${3} or recipientUserId = ${3}) as messOfUser
+    //         join user AS senderUser
+    //         on senderUser.userId = messOfUser.senderUserId
+    //         join user AS recipientUser
+    //         on recipientUser.userId = messOfUser.recipientUserId
+    //     `)
     //     .then((e) => {
     //         fs.writeFileSync("../../testdata.json", JSON.stringify(e))
-    //         console.log(e);
+    //         // console.log(e);
     //     })
+
 
     // let data = fs.readFileSync("../../test.json", "utf-8")
     // data = JSON.parse(data)
@@ -112,10 +126,11 @@ const main = async () => {
     //     "https://th.bing.com/th/id/OIP.oon3LxxjFoswuShJBf4dpQHaEj?rs=1&pid=ImgDetMain"
     // ]
 
-    // // await connection.executeQuery(`update user set avartar = ${null} where userNameGame = 'test123' or userNameGame = 'gameAccount8'`)
+    // await connection.executeQuery(`delete from messages `)
     // for (let i = 1; i <= 10; i++) {
     //     await connection.executeQuery(`update user set avartar = '${avartar[i % avartar.length]}' where userId = ${i}`)
     // }
+
 
     await connection.disconnect()
 

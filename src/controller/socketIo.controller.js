@@ -53,6 +53,64 @@ class SocketIoController {
 
     }
 
+    async privateMessage(req, res) {
+
+        try {
+            let { recipientUserId, message } = req.body
+            let recipientInfor = globalThis.socketOfUserId.get(recipientUserId)?.userInfor || {}
+
+
+            let senderUserId = req?.decodeAccessToken?.userId
+            let senderInfor = globalThis.socketOfUserId.get(senderUserId)?.userInfor
+
+            if (recipientUserId == senderUserId) {
+                return res.status(400).json({
+                    message: "Bạn không thể tự nhắn tin cho chính mình!"
+                })
+            }
+
+            if (!recipientUserId || !message) {
+                return res.status(400).json({
+                    message: "không thấy người nhận hoặc chưa có tin nhắn gửi lên!"
+                })
+            }
+
+            if (!senderInfor) {
+                return res.status(400).json({
+                    message: "sender not valid!"
+                })
+            }
+
+            let arraySocketsSender = globalThis.socketOfUserId.get(senderUserId)?.arraySockets
+            let arraySocketsRecipient = globalThis.socketOfUserId.get(recipientUserId)?.arraySockets || []
+
+            for (let socketSender of arraySocketsSender) {
+                globalThis.io.to(socketSender).emit("sendMessagePrivate", { message })
+            }
+
+            for (let socketRecipient of arraySocketsRecipient) {
+                globalThis.io.to(socketRecipient).emit("recipientMessagePrivate", { message, senderInfor })
+            }
+
+            await globalThis.connection.executeQuery(`insert into messages (senderUserId,recipientUserId,message) values (?,?,?)`, [senderUserId, recipientUserId, message])
+                .catch((e) => {
+                    throw new Error(" err when save message to DB : " + e)
+                })
+
+            return res.status(200).json({
+                message: "ok"
+            })
+
+        } catch (error) {
+            console.log("err when privateMessage : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+
+        }
+
+    }
+
 }
 
 module.exports = SocketIoController
