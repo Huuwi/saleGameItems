@@ -419,6 +419,55 @@ class CommonController {
         }
     }
 
+    async changePrice(req, res) {
+        try {
+            let userId = req?.decodeAccessToken?.userId
+            let changePrice = Number(req.body.changePrice)
+            let itemId = Number(req.body.itemId)
+            if (!userId) {
+                return res.status(400).json({
+                    message: "not found userId!"
+                })
+            }
+            if (!itemId || !changePrice || changePrice <= 0) {
+                return res.status(400).json({
+                    message: "itemId or price invalid !"
+                })
+            }
+
+            let dataSalling = await globalThis.connection.executeQuery(`
+                select * from user
+                join gameAccount on user.userId = gameAccount.userId
+                join item on item.gameId = gameAccount.gameid
+                right join itemSalling on itemSalling.itemId = item.itemId
+                where item.itemId = ${itemId}
+            `)
+                .then((data) => {
+                    return data
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
+
+            if (!dataSalling?.length) {
+                return res.status(400).json({
+                    message: "not found item valid!"
+                })
+            }
+
+            await globalThis.connection.executeQuery(`UPDATE itemSalling SET price = ${changePrice} WHERE itemId = ${itemId}`)
+
+            return res.status(200).json({
+                message: "ok"
+            })
+        }
+        catch (error) {
+            console.log("err when addItemSalling : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+        }
+    }
 
 }
 

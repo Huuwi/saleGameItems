@@ -44,8 +44,6 @@ class ManageInventoryController {
             })
 
         }
-
-
     }
 
     async cancelSalling(req, res) {
@@ -77,7 +75,6 @@ class ManageInventoryController {
                 .catch((e) => {
                     console.log(e);
                 })
-
 
             if (!dataSalling?.length) {
                 return res.status(400).json({
@@ -244,7 +241,7 @@ class ManageInventoryController {
 
     }
 
-
+    
 
 }
 

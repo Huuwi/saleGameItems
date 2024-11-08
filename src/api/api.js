@@ -27,7 +27,6 @@ api.get("/", (req, res) => {
 api.use("/auth", authMiddleWare.checkInforAccessToken)
 
 
-
 api.post("/getNewCaptcha", commonController.getNewCaptcha)
 api.post("/login", authController.login)
 api.post("/register", authController.register)
@@ -45,7 +44,7 @@ api.post("/auth/getInventoriesOfuserId", manageInventoryController.getInventorie
 api.post("/auth/changePassWord", commonController.changePassWord)
 api.post("/auth/searchUserByNickName", commonController.searchUserByNickName)
 api.post("/auth/getDataMessagesOfUserId", commonController.getDataMessagesOfUserId)
-
+api.post("/auth/changePrice", commonController.changePrice)
 
 //transaction
 api.post("/auth/createPaymentLink", paymentController.createPaymentLink)
