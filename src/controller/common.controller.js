@@ -469,6 +469,167 @@ class CommonController {
         }
     }
 
+    async buyItem(req, res) {
+
+        try {
+            let userId = req?.decodeAccessToken?.userId
+
+            let itemId = Number(req.body.itemId)
+
+            if (!itemId) {
+                return res.status(400).json({
+                    message: "itemId invalid!"
+                })
+            }
+
+
+            let inforBuyer = await globalThis.connection.executeQuery(`
+                select gameAccount.gameId , user.balance from user
+                join gameAccount on gameAccount.userId = user.userId
+                where user.userId = ${userId}
+            `)
+                .then((data) => {
+                    return data[0]
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            if (!inforBuyer) {
+                return res.status(400).json({
+                    message: "not found linked account!"
+                })
+            }
+
+            let dataFound = await globalThis.connection.executeQuery(`
+                    select price ,user.userId as salesmanUserId from
+                    (select price,itemId from itemSalling where itemId = ${itemId} ) as itemSallingFound
+                    join item on itemSallingFound.itemId = item.itemId
+                    join gameAccount on gameAccount.gameId = item.gameId
+                    join user on gameAccount.userId = user.userId
+                `)
+                .then((data) => {
+                    return data[0]
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            if (!dataFound) {
+                return res.status(400).json({
+                    message: "not found this item!"
+                })
+            }
+
+            if (inforBuyer.balance < dataFound.price) {
+                return res.status(400).json({
+                    message: "not enought money to buy this item!"
+                })
+            }
+
+
+            await globalThis.connection.executeQuery(`
+                update user set balance = balance - ${dataFound.price}
+                where userId = ${userId}
+            `)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            await globalThis.connection.executeQuery(`
+                    update user set balance = balance + ${dataFound.price * .95}
+                    where userId = ${dataFound.salesmanUserId}
+                `)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            await globalThis.connection.executeQuery(`
+                    delete from itemSalling where itemId = ${itemId}
+                `)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            await globalThis.connection.executeQuery(`
+                    update item set gameId = ${inforBuyer.gameId}
+                    where itemId = ${itemId}
+                `)
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+            await globalThis.connection.executeQuery(`
+                   INSERT INTO transaction (buyerUserId,salerUserId,amount,timeBuy)
+                   VALUES (?,?,?,?);
+                ` , [userId, dataFound.salesmanUserId, dataFound.price, Date.now()])
+                .catch((e) => {
+                    throw new Error(e)
+                })
+
+
+            return res.status(200).json({
+                message: "ok",
+            })
+
+        } catch (error) {
+            console.log("err when buyItem : ", error);
+            return res.status(500).json({
+                message: 'have wrong!'
+            })
+        }
+
+    }
+
+
+    async dropItem(req, res) {
+
+        try {
+            let userId = req?.decodeAccessToken?.userId
+            let itemId = Number(req.body.itemId)
+
+            if (!itemId) {
+                return res.status(400).json({
+                    message: "itemId invalid !"
+                })
+            }
+
+            let itemFound = await globalThis.connection.executeQuery(`
+                select * from user
+                join gameAccount on user.userId = gameAccount.userId
+                join item on item.gameId = gameAccount.gameid
+                where item.itemId = ${itemId}
+            `)
+                .then((data) => {
+                    return data[0]
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
+
+            if (!itemFound) {
+                return res.status(400).json({
+                    message: "not found item valid!"
+                })
+            }
+
+            await globalThis.connection.executeQuery(`UPDATE item SET gameId = null WHERE itemId = ${itemId}`)
+
+            await globalThis.connection.executeQuery(`UPDATE user SET blance = blance + 100 WHERE userId = ${userId}`)
+
+            return res.status(200).json({
+                message: "ok"
+            })
+        }
+        catch (error) {
+            console.log("err when dropItem : ", error);
+            return res.status(500).json({
+                message: "have wrong!"
+            })
+        }
+
+    }
+
 }
 
 

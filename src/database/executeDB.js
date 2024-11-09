@@ -75,16 +75,23 @@ const main = async () => {
     //     timeSend double
     // );`);
 
+    // await connection.executeQuery(`CREATE TABLE transaction (
+    //     transactionId int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    //     buyerUserId int,
+    //     salerUserId int,
+    //     amount double,
+    //     timeBuy double
+    // );`);
+
 
     //----------------------------------------------------------------------------------------------------------------------------------
 
 
-    // await connection.executeQuery(`select senderUser.nickName as senderNickName , senderUser.avartar as senderAvatar , senderUser.userId as senderUserid,${3} as queryUserId ,recipientUser.nickName as recipientNickName , recipientUser.avartar as recipientAvatar , recipientUser.userId as recipientUserid ,messOfUser.message as message from 
-    //     (select * from messages where senderUserId = ${3} or recipientUserId = ${3}) as messOfUser
-    //         join user AS senderUser
-    //         on senderUser.userId = messOfUser.senderUserId
-    //         join user AS recipientUser
-    //         on recipientUser.userId = messOfUser.recipientUserId
+    // await connection.executeQuery(`select price,gameAccount.gameId,user.userId as salesmanUserId from
+    //                 (select price,itemId from itemSalling where itemId = ${55} ) as itemSallingFound
+    //                 join item on itemSallingFound.itemId = item.itemId
+    //                 join gameAccount on gameAccount.gameId = item.gameId
+    //                 join user on gameAccount.userId = user.userId
     //     `)
     //     .then((e) => {
     //         fs.writeFileSync("../../testdata.json", JSON.stringify(e))
@@ -127,7 +134,17 @@ const main = async () => {
     //     "https://th.bing.com/th/id/OIP.oon3LxxjFoswuShJBf4dpQHaEj?rs=1&pid=ImgDetMain"
     // ]
 
-    await connection.executeQuery(`delete from messages `)
+    // await connection.executeQuery(`delete from messages `)
+
+    // await connection.executeQuery(`
+    //         insert into gameAccount (userNameGame,passWordGame)
+    //         values ('gameAccount11' ,'gameAccount11')
+    //     `)
+
+    // await connection.executeQuery(`
+    //         update user set balance = 9999999999
+    //         where nickName = 'phía sau vài cô gái'
+    //     `)
 
     // for (let i = 1; i <= 10; i++) {
     //     await connection.executeQuery(`update user set avartar = '${avartar[i % avartar.length]}' where userId = ${i}`)

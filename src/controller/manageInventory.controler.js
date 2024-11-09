@@ -186,7 +186,7 @@ class ManageInventoryController {
             let userId = Number(req?.decodeAccessToken?.userId)
             let itemId = Number(req.body.itemId)
             let price = Number(req.body.price)
-            if (!userId || !price || !itemId) {
+            if (!userId || !price || !itemId || price <= 0) {
                 return res.status(400).json({
                     message: "data sent not valid!"
                 })
@@ -195,8 +195,7 @@ class ManageInventoryController {
             let itemFound = await globalThis.connection.executeQuery(`
                     select * from user
                     join gameAccount on gameAccount.userId = user.userId
-                    join item on item.itemId = gameAccount.itemId
-                    join itemSalling on itemSalling.itemId = item.itemId
+                    join item on item.gameId = gameAccount.gameId
                     where item.itemId = ${itemId}
                 `)
                 .then((data) => {
@@ -237,11 +236,8 @@ class ManageInventoryController {
 
     }
 
-    async getInventoriesOfuserId(req, res) {
 
-    }
 
-    
 
 }
 
