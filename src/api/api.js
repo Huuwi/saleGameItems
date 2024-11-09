@@ -24,6 +24,12 @@ api.get("/", (req, res) => {
     )
 })
 
+api.get("/ping", (req, res) => {
+    res.status(200).json({
+        message: "ok from backend!"
+    });
+})
+
 api.use("/auth", authMiddleWare.checkInforAccessToken)
 
 

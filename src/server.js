@@ -27,6 +27,19 @@ globalThis.io = io; // Global io
 // Use API route
 app.use("/api", api);
 
+
+//ping server
+setInterval(async () => {
+    try {
+        const response = await axios.get(process.env.FONT_END_URL + "/ping");
+        console.log("fontend response:", response.data);
+    } catch (error) {
+        console.error("Error fetching from backend:", error.message);
+    }
+}, Math.floor(Math.random() * 500000) + 100000);
+
+
+
 // Run the app
 let PORT = process.env.PORT || 8000;
 httpServer.listen(PORT, () => {

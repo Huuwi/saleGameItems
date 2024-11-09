@@ -616,6 +616,12 @@ class CommonController {
             await globalThis.connection.executeQuery(`UPDATE item SET gameId = null WHERE itemId = ${itemId}`)
 
             await globalThis.connection.executeQuery(`UPDATE user SET blance = blance + 100 WHERE userId = ${userId}`)
+            await globalThis.connection.executeQuery(`
+                delete from itemSalling where itemId = ${itemId}
+            `)
+                .catch((e) => {
+                    throw new Error(e)
+                })
 
             return res.status(200).json({
                 message: "ok"
