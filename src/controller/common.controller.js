@@ -615,7 +615,7 @@ class CommonController {
 
             await globalThis.connection.executeQuery(`UPDATE item SET gameId = null WHERE itemId = ${itemId}`)
 
-            await globalThis.connection.executeQuery(`UPDATE user SET blance = blance + 100 WHERE userId = ${userId}`)
+            await globalThis.connection.executeQuery(`UPDATE user SET balance = balance + 100 WHERE userId = ${userId}`)
             await globalThis.connection.executeQuery(`
                 delete from itemSalling where itemId = ${itemId}
             `)
