@@ -10,15 +10,8 @@ class CommonController {
 
         try {
 
-            let ipAddress = req.headers["x-forwarded-for"] || req.ip
 
-            if (!ipAddress) {
-                return res.status(400).json({
-                    message: "not found ip address!"
-                })
-            }
-
-            let captchaData = await commonHelper.generatorCaptcha(ipAddress)
+            let captchaData = await commonHelper.generatorCaptcha()
 
             if (!captchaData?.state) {
                 throw new Error("unknown error when generatorCaptcha")
@@ -26,9 +19,9 @@ class CommonController {
 
             return res.status(200).json({
                 message: "ok!",
-                base64: captchaData.base64
+                base64: captchaData.base64,
+                key: captchaData.key
             })
-
 
 
         } catch (error) {
@@ -86,16 +79,15 @@ class CommonController {
 
             let userId = req.decodeAccessToken.userId;
 
-            let { userNameGame, passWordGame, text } = req.body;
+            let { userNameGame, passWordGame, text, key } = req.body;
 
-            if (!userNameGame || !passWordGame || !text) {
+            if (!userNameGame || !passWordGame || !text || !key) {
                 return res.status(400).json({
                     message: "missing data!",
                 })
             }
 
-            let ipAddress = req.ip || req.headers["x-forwarded-for"]
-            let valid = commonHelper.verifyCaptcha(ipAddress, text)
+            let valid = commonHelper.verifyCaptcha(key, text)
 
             if (!valid?.state) {
                 return res.status(400).json({

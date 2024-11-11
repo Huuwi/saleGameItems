@@ -1,15 +1,13 @@
 const { createCanvas, loadImage } = require("canvas")
-const fs = require("fs")
+const crypto = require("crypto")
+
 
 class CommonHelper {
-    async generatorCaptcha(ipAddress) {
 
+
+    async generatorCaptcha() {
 
         try {
-
-            if (!ipAddress) {
-                return { state: false, message: "not found ipAddress!" }
-            }
 
             //create text
             let characters = "1234567890qwertyuiopasdfghjklzxcvbbnmQWERTYUIOPASDFGHJKLZXCVBNM"
@@ -47,16 +45,26 @@ class CommonHelper {
                     }
                     base64 = canvas.toDataURL("image/png")
                 })
-            console.log(text);
+            // console.log(text);
+
+            const hash = crypto.createHash("md5")
+            let key = hash.update(text + process.env.CAPTCHA_SECRECT_KEY + Date.now() + Math.random()).digest('hex')
+
+            globalThis.tokenCaptcha.set(key, {
+                isUse: false,
+                text,
+                date: Date.now() + 15 * 1000
+            })
+
+            console.log(globalThis.tokenCaptcha);
 
 
-            // fs.writeFileSync("./captcha.png", base64, { encoding: "base64" })
-
-            globalThis.captchaOfIpAddress.set(ipAddress, { text, date: Date.now() + 60 * 1000 })
-
+            setTimeout(() => {
+                globalThis.tokenCaptcha.delete(key)
+            }, 15000)
 
             return {
-                text, base64, state: true
+                text, base64, state: true, key
             }
 
         } catch (error) {
@@ -66,15 +74,19 @@ class CommonHelper {
 
     }
 
-    verifyCaptcha(ipAddress, textCaptchaClient) {
+    verifyCaptcha(key, textCaptchaClient) {
         try {
-            let captchaData = globalThis.captchaOfIpAddress.get(ipAddress)
+            let captchaData = globalThis.tokenCaptcha.get(key)
 
             if (!captchaData) {
-                return { state: false, message: "not found captcha data!" }
+                return { state: false, message: "not found or expired captcha data!" }
             }
 
-            let { text, date } = captchaData
+            let { text, date, isUse } = captchaData
+
+            if (isUse) {
+                return { state: false, message: "captcha already use!" }
+            }
 
             if (Date.now() > date) {
                 return { state: false, message: "captcha expired time!" }
@@ -82,12 +94,16 @@ class CommonHelper {
 
             if (text != textCaptchaClient) {
                 captchaData.date = Date.now() - 1
+                captchaData.isUse = true
                 return { state: false, message: "captcha not valid!" }
             }
             captchaData.date = Date.now() - 1
+            captchaData.isUse = true
             return { state: true, message: "valid success!" }
 
         } catch (error) {
+            console.log(error);
+
             return { state: false, message: "unknown error!", error }
         }
     }

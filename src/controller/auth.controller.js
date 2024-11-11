@@ -13,16 +13,15 @@ class AuthController {
 
         try {
 
-            let { text, userName, passWord } = req.body
-            let ipAddress = req.ip || req.headers["x-forwarded-for"]
+            let { text, userName, passWord, key } = req.body
 
-            if (!text || !userName || !passWord) {
+            if (!text || !userName || !passWord || !key) {
                 return res.status(400).json({
                     message: "missing data!"
                 })
             }
 
-            let valid = commonHelper.verifyCaptcha(ipAddress, text)
+            let valid = commonHelper.verifyCaptcha(key, text)
 
             if (!valid?.state) {
                 return res.status(400).json({
@@ -112,10 +111,9 @@ class AuthController {
     async register(req, res) {
         try {
 
-            let { text, userName, passWord, rePassWord, nickName } = req.body
-            let ipAddress = req.ip || req.headers["x-forwarded-for"]
+            let { text, userName, passWord, rePassWord, nickName, key } = req.body
 
-            if (!text || !userName || !passWord || !rePassWord || !nickName) {
+            if (!text || !userName || !passWord || !rePassWord || !nickName || !key) {
                 return res.status(400).json({
                     message: "missing data!"
                 })
@@ -125,7 +123,7 @@ class AuthController {
 
 
             for (let e of charactersNotValid) {
-                if (userName.includes(e) || nickName.includes(e)) {
+                if (userName.includes(e) || nickName.includes(e) || passWord.includes(e)) {
                     return res.status(400).json({
                         message: `can't include characters :  ${charactersNotValid.join(" ,")}`
                     })
@@ -139,7 +137,7 @@ class AuthController {
             }
 
 
-            let valid = commonHelper.verifyCaptcha(ipAddress, text)
+            let valid = commonHelper.verifyCaptcha(key, text)
 
             if (!valid?.state) {
                 return res.status(400).json({

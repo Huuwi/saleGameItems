@@ -6,13 +6,14 @@ const { Connection } = require("./database/connection.js");
 const { createServer } = require("http");
 const SocketIo = require("./socketIo/socket.io.js");
 const { configSocketIo } = require("./config/configSocketIo.js");
+const axios = require("axios")
 
 // Global variables
 globalThis.connection = new Connection();
 globalThis.connection.connect();
-globalThis.captchaOfIpAddress = new Map();
 globalThis.tokenOfUserId = new Map();
 globalThis.socketOfUserId = new Map();
+globalThis.tokenCaptcha = new Map();
 
 
 // Create app and config
