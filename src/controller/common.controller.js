@@ -432,7 +432,7 @@ class CommonController {
                 join gameAccount on user.userId = gameAccount.userId
                 join item on item.gameId = gameAccount.gameid
                 right join itemSalling on itemSalling.itemId = item.itemId
-                where item.itemId = ${itemId}
+                where item.itemId = ${itemId} and user.userId = ${userId}
             `)
                 .then((data) => {
                     return data

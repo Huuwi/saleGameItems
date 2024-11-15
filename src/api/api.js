@@ -32,7 +32,6 @@ api.get("/ping", (req, res) => {
 
 api.use("/auth", authMiddleWare.checkInforAccessToken)
 
-
 api.post("/getNewCaptcha", commonController.getNewCaptcha)
 api.post("/login", authController.login)
 api.post("/register", authController.register)

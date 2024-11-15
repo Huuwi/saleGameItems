@@ -29,6 +29,8 @@ class AuthController {
                 })
             }
 
+            // ` " '
+
             let charactersNotValid = ["`", '"', "`"]
             for (let e of charactersNotValid) {
                 if (userName.includes(e)) {
