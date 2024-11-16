@@ -31,7 +31,7 @@ class AuthController {
 
             // ` " '
 
-            let charactersNotValid = ["`", '"', "`"]
+            let charactersNotValid = ["`", '"', "'"]
             for (let e of charactersNotValid) {
                 if (userName.includes(e)) {
                     return res.status(400).json({
