@@ -53,7 +53,7 @@ class CommonHelper {
             globalThis.tokenCaptcha.set(key, {
                 isUse: false,
                 text,
-                date: Date.now() + 60 * 1000
+                date: Date.now() + 20 * 1000
             })
 
             console.log(globalThis.tokenCaptcha);
@@ -61,7 +61,7 @@ class CommonHelper {
 
             setTimeout(() => {
                 globalThis.tokenCaptcha.delete(key)
-            }, 60000)
+            }, 20000)
 
             return {
                 text, base64, state: true, key

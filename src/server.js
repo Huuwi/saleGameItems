@@ -15,54 +15,54 @@ globalThis.tokenOfUserId = new Map();
 globalThis.socketOfUserId = new Map();
 globalThis.tokenCaptcha = new Map();
 
-//testing
+// //testing
 
-globalThis.tokenCaptcha.set('30e8ba83efd0bf58643cadb6fe25fd42', {
-    isUse: true,
-    text: 'E4Wbn',
-    date: 9731747216718
-}) // captcha already use!
+// globalThis.tokenCaptcha.set('30e8ba83efd0bf58643cadb6fe25fd42', {
+//     isUse: true,
+//     text: 'E4Wbn',
+//     date: 9731747216718
+// }) // captcha already use!
 
-globalThis.tokenCaptcha.set('af9b71ae0e9149115dce78e25d72a742', {
-    isUse: false,
-    text: 'E4Wbn',
-    date: 31747216718
-}) // captcha expired time!
-
-
-globalThis.tokenCaptcha.set('cb5a3d7736c102a417e91c5bc627b692', {
-    isUse: false,
-    text: '329ns',
-    date: 9731747216718
-}) //valid success!
+// globalThis.tokenCaptcha.set('af9b71ae0e9149115dce78e25d72a742', {
+//     isUse: false,
+//     text: 'E4Wbn',
+//     date: 31747216718
+// }) // captcha expired time!
 
 
-
-globalThis.tokenCaptcha.set('91c5bc627b692cb5a3d7736c102a417e', {
-    isUse: false,
-    text: '123sa',
-    date: 9731747216718
-}) //valid success!
-
-
-globalThis.tokenCaptcha.set('1235bc627b692cb5a3d7736c102a417e', {
-    isUse: false,
-    text: '123sa',
-    date: 9731747216718
-}) //valid success!
+// globalThis.tokenCaptcha.set('cb5a3d7736c102a417e91c5bc627b692', {
+//     isUse: false,
+//     text: '329ns',
+//     date: 9731747216718
+// }) //valid success!
 
 
-globalThis.tokenCaptcha.set('6875bc627b692cb5a3d7736c102a417e', {
-    isUse: false,
-    text: '123sa',
-    date: 9731747216718
-}) //valid success!
 
-globalThis.tokenCaptcha.set('5123bc627b692cb5a3d7736c102a417e', {
-    isUse: false,
-    text: '123sa',
-    date: 9731747216718
-}) //valid success!
+// globalThis.tokenCaptcha.set('91c5bc627b692cb5a3d7736c102a417e', {
+//     isUse: false,
+//     text: '123sa',
+//     date: 9731747216718
+// }) //valid success!
+
+
+// globalThis.tokenCaptcha.set('1235bc627b692cb5a3d7736c102a417e', {
+//     isUse: false,
+//     text: '123sa',
+//     date: 9731747216718
+// }) //valid success!
+
+
+// globalThis.tokenCaptcha.set('6875bc627b692cb5a3d7736c102a417e', {
+//     isUse: false,
+//     text: '123sa',
+//     date: 9731747216718
+// }) //valid success!
+
+// globalThis.tokenCaptcha.set('5123bc627b692cb5a3d7736c102a417e', {
+//     isUse: false,
+//     text: '123sa',
+//     date: 9731747216718
+// }) //valid success!
 
 
 
